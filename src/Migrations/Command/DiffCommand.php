@@ -16,7 +16,6 @@ use Yiisoft\Yii\Console\ExitCode;
 
 use function addslashes;
 use function assert;
-use function class_exists;
 use function count;
 use function filter_var;
 use function is_string;

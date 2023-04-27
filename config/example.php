@@ -33,6 +33,10 @@ return [
                 'schema_assets_filter' => static function (): bool {
                     return true;
                 },
+                'middlewares' => [
+                    // logger middleware
+                    Doctrine\DBAL\Logging\Middleware::class
+                ]
             ],
             'mysql' => [
                 'params' => [

@@ -9,7 +9,6 @@ use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Types\Type;
 use InvalidArgumentException;
-use Psr\Log\LoggerInterface;
 use Yiisoft\Yii\Doctrine\Configuration\ConfigurationBuilder;
 use Yiisoft\Yii\Doctrine\Dbal\Model\ConnectionModel;
 use Yiisoft\Yii\Doctrine\EventManager\EventManagerFactory;
@@ -24,22 +23,23 @@ final class ConnectionFactory
 
     /**
      * @psalm-param array{
-     *     params: array<string, mixed>,
-     *     events: array|empty,
-     *     custom_types: array<string, class-string<Type>>|empty,
      *     auto_commit: bool|empty,
+     *     custom_types: array<string, class-string<Type>>|empty,
+     *     events: array|empty,
+     *     middlewares: array<array-key, class-string<\Doctrine\DBAL\Driver\Middleware>>|empty,
+     *     params: array<string, mixed>,
      *     schema_assets_filter: callable|empty
      * } $dbalConfig
      *
      * @throws Exception
      */
-    public function create(array $dbalConfig, LoggerInterface $logger): ConnectionModel
+    public function create(array $dbalConfig): ConnectionModel
     {
         if (!isset($dbalConfig['params'])) {
             throw new InvalidArgumentException('Not found "params" connection');
         }
 
-        $configuration = $this->configurationBuilder->createConfigurationDbal($dbalConfig, $logger);
+        $configuration = $this->configurationBuilder->createConfigurationDbal($dbalConfig);
 
         $eventManager = $this->eventManagerFactory->createForDbal($dbalConfig['events'] ?? []);
 
@@ -51,7 +51,7 @@ final class ConnectionFactory
     }
 
     /**
-     * @psalm-param array<string, class-string<Type>>|empty $customTypes
+     * @psalm-param array<string, class-string<\Doctrine\DBAL\Types\Type>>|empty $customTypes
      *
      * @throws Exception
      */

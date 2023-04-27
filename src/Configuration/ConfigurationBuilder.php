@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Doctrine\Configuration;
 
-use Doctrine\DBAL\Driver\Middleware as MiddlewareInterface;
-use Doctrine\DBAL\Logging\Middleware;
+use Doctrine\DBAL\Driver\Middleware;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Internal\Hydration\AbstractHydrator;
@@ -20,7 +20,6 @@ use Doctrine\Persistence\Mapping\Driver\PHPDriver;
 use Doctrine\Persistence\Mapping\Driver\StaticPHPDriver;
 use InvalidArgumentException;
 use Psr\Cache\CacheItemPoolInterface;
-use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Injector\Injector;
@@ -39,20 +38,24 @@ final class ConfigurationBuilder
     /**
      * @psalm-param array{
      *     auto_commit: bool,
-     *     custom_types: array<string,
-     *     class-string<\Doctrine\DBAL\Types\Type>>,
+     *     custom_types: array<string, class-string<Type>>,
      *     events: array<array-key, mixed>,
+     *     middlewares: array<array-key, class-string<\Doctrine\DBAL\Driver\Middleware>>|empty,
      *     params: array<string, mixed>,
      *     schema_assets_filter: callable
      * } $dbalConfig
      */
-    public function createConfigurationDbal(array $dbalConfig, LoggerInterface $logger): Configuration
+    public function createConfigurationDbal(array $dbalConfig): Configuration
     {
         $configuration = new Configuration();
 
         // logger
-        $middlewares = [];
-        $middlewares[] = $this->configureMiddlewareLogger($logger);
+        $middlewares = array_map(
+            function ($middleware): Middleware {
+                return $this->injector->make($middleware);
+            },
+            $dbalConfig['middlewares'] ?? []
+        );
 
         $configuration->setMiddlewares($middlewares);
 
@@ -63,10 +66,6 @@ final class ConfigurationBuilder
         return $configuration;
     }
 
-    private function configureMiddlewareLogger(LoggerInterface $logger): MiddlewareInterface
-    {
-        return new Middleware($logger);
-    }
 
     private function configureAutoCommit(Configuration $configuration, ?bool $autoCommit): void
     {
@@ -363,7 +362,7 @@ final class ConfigurationBuilder
                     break;
                 default:
                     throw new InvalidArgumentException(
-                        'Doctrine driver mapper: "annotation", "attribute", "php", "static_php", "xml"  not found'
+                        'Doctrine driver mapper: "attribute", "php", "static_php", "xml"  not found'
                     );
             }
 

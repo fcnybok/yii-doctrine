@@ -52,7 +52,7 @@ final class DoctrineManager implements ManagerRegistry
         $connectionModel = $this->connections[$name] ?? null;
 
         if (null === $connectionModel) {
-            throw new RuntimeException(sprintf('Connection by name "%s" already exists', $name));
+            throw new RuntimeException(sprintf('Connection by name "%s" already is not exists', $name));
         }
 
         $connectionModel->getConnection()->close();
@@ -153,6 +153,19 @@ final class DoctrineManager implements ManagerRegistry
     public function getDefaultManagerName(): string
     {
         return $this->defaultManager;
+    }
+
+    public function closeManager(string $name): void
+    {
+        $manager = $this->managers[$name] ?? null;
+
+        if (null === $manager) {
+            throw new RuntimeException(sprintf('Entity manager by name "%s" already is not exists', $name));
+        }
+
+        $manager->close();
+
+        unset($this->managers[$name]);
     }
 
     public function resetAllManager(): void

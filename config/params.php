@@ -70,5 +70,4 @@ return [
     'yiisoft/yii-doctrine' => [],
     'yiisoft/yii-doctrine-migrations' => [],
     'yiisoft/yii-doctrine-fixture' => [],
-
 ];

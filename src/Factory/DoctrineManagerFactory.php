@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Doctrine\Factory;
 
 use Psr\Cache\CacheItemPoolInterface;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 use RuntimeException;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Yiisoft\Yii\Doctrine\Dbal\Factory\ConnectionFactory;
@@ -27,14 +25,13 @@ final class DoctrineManagerFactory
         ConnectionFactory $connectionFactory,
         EntityManagerFactory $entityManagerFactory,
         CacheItemPoolInterface $cacheDriver = new NullAdapter(),
-        LoggerInterface $logger = new NullLogger(),
     ): DoctrineManager {
         // init connections
         $connections = [];
 
         if (!empty($this->doctrineConfig['dbal'])) {
             foreach ($this->doctrineConfig['dbal'] as $name => $dbalConfig) {
-                $connections[$name] = $connectionFactory->create($dbalConfig, $logger);
+                $connections[$name] = $connectionFactory->create($dbalConfig);
             }
         }
 
