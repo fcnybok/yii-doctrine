@@ -12,6 +12,8 @@ use Yiisoft\Yii\Doctrine\Migrations\Factory\MigrationConfigurationFactory;
 use Yiisoft\Yii\Doctrine\Migrations\MigrationConfigurationManager;
 use Yiisoft\Yii\Doctrine\Orm\Provider\CustomerEntityManagerProvider;
 
+/** @var $params */
+
 return [
     ConnectionProvider::class => fn(DoctrineManager $doctrineManager): ConnectionProvider => new DbalConnectionProvider(
         $doctrineManager

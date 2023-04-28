@@ -345,11 +345,7 @@ final class ConfigurationBuilder
                         );
                     }
 
-                    $driver = new AttributeDriver(
-                        [
-                            $dir,
-                        ]
-                    );
+                    $driver = new AttributeDriver([$dir]);
 
                     break;
                 case DriverMappingEnum::PHP_MAPPING:

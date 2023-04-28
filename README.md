@@ -19,7 +19,7 @@ composer require fcnybok/yii-doctrine
 Basic Usage
 -----------
 
-Configuration params doctrine: dbal, orm, migrations, fixture example config path "config/example.php"
+Configuration params doctrine: dbal, orm, migrations, fixture example config path [example.php](config/example.php)
 
 ### DBAL
 
@@ -228,3 +228,10 @@ Command:
  - doctrine/migrations/status
  - doctrine/migrations/sync-metadata-storage
  - doctrine/migrations/up-to-date
+
+### Fixture
+
+Load fixture:
+```php
+php yii doctrine/fixture/load --em=default
+```

@@ -63,10 +63,7 @@ final class DynamicEntityManagerFactory
             $proxyConfig
         );
 
-        $this->doctrineManager->addManager(
-            $entityManagerName,
-            $entityManager
-        );
+        $this->doctrineManager->addManager($entityManagerName, $entityManager);
 
         return $entityManager;
     }
