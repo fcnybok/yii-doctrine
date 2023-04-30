@@ -82,6 +82,29 @@ EntityManagerInterface::class => fn(DoctrineManager $doctrineManager
     ),
 ```
 
+Use default entity manager:
+```php
+final class TestController
+{
+    public function __construct(
+        private readonly \Doctrine\ORM\EntityManagerInterface $entityManager
+    ) {
+        $this->entityManager = $entityManager;
+    }
+}
+```
+
+If two or more entity manager use Yiisoft\Yii\Doctrine\Doctrine\DoctrineManager, find by name entity manager
+```php
+class Test2Controller
+{
+    public function __construct(
+        private readonly Yiisoft\Yii\Doctrine\DoctrineManager $doctrineManager,
+    ) {
+    }
+}
+```
+
 Dynamic create entity manager:
 ```php
 final class EntityManagerService
@@ -128,28 +151,6 @@ final class EntityManagerService
 }
 ```
 
-```php
-// $entityManager default connection
-final class TestController
-{
-    public function __construct(
-        private readonly \Doctrine\ORM\EntityManagerInterface $entityManager
-    ) {
-        $this->entityManager = $entityManager;
-    }
-}
-
-// If two or more entity manager use Yiisoft\Yii\Doctrine\Doctrine\DoctrineManager, find by name entity manager 
-
-class Test2Controller
-{
-    public function __construct(
-        private readonly Yiisoft\Yii\Doctrine\DoctrineManager $doctrineManager,
-    ) {
-    }
-}
-```
-
 Command:
  - doctrine/orm/info
  - doctrine/orm/generate-proxies
@@ -186,8 +187,8 @@ return [
 Add on di.php configuration psr-6 cache
 ```php
 CacheItemPoolInterface::class => fn(CacheFactory $cacheFactory): CacheItemPoolInterface => $cacheFactory->create(
-        $params['yiisoft/yii-doctrine']['cache'] ?? []
-    ),
+    $params['yiisoft/yii-doctrine']['cache'] ?? []
+),
 ```
 or add di.php customer implementation
 

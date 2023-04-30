@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\Doctrine\Dbal\Command\Database;
 
 use Doctrine\DBAL\DriverManager;

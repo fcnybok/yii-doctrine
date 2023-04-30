@@ -358,7 +358,7 @@ final class ConfigurationBuilder
                     break;
                 default:
                     throw new InvalidArgumentException(
-                        'Doctrine driver mapper: "attribute", "php", "static_php", "xml"  not found'
+                        'Doctrine driver mapper: "attribute", "php", "static_php", "xml" not found'
                     );
             }
 
