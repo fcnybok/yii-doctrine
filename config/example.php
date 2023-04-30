@@ -13,10 +13,10 @@ return [
                 // check params https://www.doctrine-project.org/projects/doctrine-dbal/en/current/reference/configuration.html
                 'params' => [
                     'driver' => 'pdo_pgsql',
-                    'dbname' => $_ENV['DB_POSTGRES_DB_NAME'],
-                    'host' => $_ENV['DB_POSTGRES_HOST'],
-                    'password' => $_ENV['DB_POSTGRES_PASSWORD'],
-                    'user' => $_ENV['DB_POSTGRES_USER'],
+                    'dbname' => 'dbname',
+                    'host' => 'localhost',
+                    'password' => 'secret',
+                    'user' => 'postgres',
                 ],
                 'custom_types' => [
 //                    UuidType::NAME => UuidType::class
@@ -40,11 +40,11 @@ return [
             ],
             'mysql' => [
                 'params' => [
-                    'driver' => 'pdo_pgsql',
-                    'dbname' => $_ENV['DB_POSTGRES_DB_NAME'],
-                    'host' => $_ENV['DB_POSTGRES_HOST'],
-                    'password' => $_ENV['DB_POSTGRES_PASSWORD'],
-                    'user' => $_ENV['DB_POSTGRES_USER'],
+                    'driver' => 'pdo_mysql',
+                    'dbname' => 'dbname',
+                    'host' => 'localhost',
+                    'password' => 'secret',
+                    'user' => 'root',
                 ],
             ]
         ],
