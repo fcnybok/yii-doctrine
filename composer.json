@@ -15,17 +15,17 @@
     ],
     "require": {
         "php": ">=8.1.0",
-        "doctrine/orm": "^2.14.3",
+        "doctrine/orm": "^2.15.1",
         "doctrine/migrations": "^3.6.0",
         "psr/cache": "^2.0|^3.0",
-        "symfony/cache": "^6.2.8",
+        "symfony/cache": "^v6.2.10",
         "psr/log": "^2|^3",
         "yiisoft/aliases": "^3.0",
         "yiisoft/injector": "^1.1",
         "yiisoft/yii-console": "^2.0.1"
     },
     "require-dev": {
-        "doctrine/data-fixtures": "^1.6.3",
+        "doctrine/data-fixtures": "^1.6.6",
         "roave/infection-static-analysis-plugin": "^1.29",
         "vimeo/psalm": "^4.30|^5.9",
         "rector/rector": "^0.15.25"

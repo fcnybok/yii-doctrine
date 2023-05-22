@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\Doctrine\Configuration;
+namespace Yiisoft\Yii\Doctrine\Orm\Factory;
 
-use Doctrine\DBAL\Driver\Middleware;
-use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Internal\Hydration\AbstractHydrator;
@@ -27,58 +25,12 @@ use Yiisoft\Yii\Doctrine\Orm\Enum\DriverMappingEnum;
 
 use function sprintf;
 
-final class ConfigurationBuilder
+final class ConfigurationFactory
 {
     public function __construct(
         private readonly Aliases $aliases,
         private readonly Injector $injector,
     ) {
-    }
-
-    /**
-     * @psalm-param array{
-     *     auto_commit: bool,
-     *     custom_types: array<string, class-string<Type>>,
-     *     events: array<array-key, mixed>,
-     *     middlewares: array<array-key, class-string<\Doctrine\DBAL\Driver\Middleware>>|empty,
-     *     params: array<string, mixed>,
-     *     schema_assets_filter: callable
-     * } $dbalConfig
-     */
-    public function createConfigurationDbal(array $dbalConfig): Configuration
-    {
-        $configuration = new Configuration();
-
-        // logger
-        $middlewares = array_map(
-            function ($middleware): Middleware {
-                return $this->injector->make($middleware);
-            },
-            $dbalConfig['middlewares'] ?? []
-        );
-
-        $configuration->setMiddlewares($middlewares);
-
-        $this->configureAutoCommit($configuration, $dbalConfig['auto_commit'] ?? null);
-
-        $this->configureSchemaAssetsFilter($configuration, $dbalConfig['schema_assets_filter'] ?? null);
-
-        return $configuration;
-    }
-
-
-    private function configureAutoCommit(Configuration $configuration, ?bool $autoCommit): void
-    {
-        if (null !== $autoCommit) {
-            $configuration->setAutoCommit($autoCommit);
-        }
-    }
-
-    private function configureSchemaAssetsFilter(Configuration $configuration, ?callable $schemaAssetsFilter): void
-    {
-        if (null !== $schemaAssetsFilter) {
-            $configuration->setSchemaAssetsFilter($schemaAssetsFilter);
-        }
     }
 
     /**
@@ -101,12 +53,13 @@ final class ConfigurationBuilder
      * } $ormConfig
      * @psalm-param array{auto_generate: bool|null, path: string, namespace: string|null} $proxyConfig
      */
-    public function configureOrm(
-        Configuration $configuration,
+    public function create(
         CacheItemPoolInterface $cacheDriver,
         array $ormConfig,
         array $proxyConfig
-    ): void {
+    ): Configuration {
+        $configuration = new Configuration();
+
         // naming strategy
         $this->configureNamingStrategy($configuration, $ormConfig['naming_strategy'] ?? null);
         // quote strategy
@@ -157,6 +110,8 @@ final class ConfigurationBuilder
 
         // init meta data drivers
         $this->configureMetaDataDrivers($configuration, $ormConfig['mappings'] ?? []);
+
+        return $configuration;
     }
 
     /**

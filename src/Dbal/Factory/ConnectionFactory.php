@@ -9,14 +9,13 @@ use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Types\Type;
 use InvalidArgumentException;
-use Yiisoft\Yii\Doctrine\Configuration\ConfigurationBuilder;
 use Yiisoft\Yii\Doctrine\Dbal\Model\ConnectionModel;
 use Yiisoft\Yii\Doctrine\EventManager\EventManagerFactory;
 
 final class ConnectionFactory
 {
     public function __construct(
-        private readonly ConfigurationBuilder $configurationBuilder,
+        private readonly ConfigurationFactory $configurationFactory,
         private readonly EventManagerFactory $eventManagerFactory,
     ) {
     }
@@ -39,7 +38,7 @@ final class ConnectionFactory
             throw new InvalidArgumentException('Not found "params" connection');
         }
 
-        $configuration = $this->configurationBuilder->createConfigurationDbal($dbalConfig);
+        $configuration = $this->configurationFactory->create($dbalConfig);
 
         $eventManager = $this->eventManagerFactory->createForDbal($dbalConfig['events'] ?? []);
 
@@ -47,7 +46,7 @@ final class ConnectionFactory
 
         $this->configureCustomTypes($connection, $dbalConfig['custom_types'] ?? []);
 
-        return new ConnectionModel($connection, $configuration, $eventManager);
+        return new ConnectionModel($connection, $eventManager);
     }
 
     /**

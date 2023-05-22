@@ -12,14 +12,13 @@ use Doctrine\ORM\Internal\Hydration\AbstractHydrator;
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 use Psr\Cache\CacheItemPoolInterface;
-use Yiisoft\Yii\Doctrine\Configuration\ConfigurationBuilder;
 use Yiisoft\Yii\Doctrine\Dbal\Model\ConnectionModel;
 use Yiisoft\Yii\Doctrine\EventManager\EventManagerFactory;
 
 final class EntityManagerFactory
 {
     public function __construct(
-        private readonly ConfigurationBuilder $configurationBuilder,
+        private readonly ConfigurationFactory $configurationFactory,
         private readonly EventManagerFactory $eventManagerFactory,
     ) {
     }
@@ -52,8 +51,7 @@ final class EntityManagerFactory
         array $entityManagerConfig,
         array $proxyConfig
     ): EntityManagerInterface {
-        $this->configurationBuilder->configureOrm(
-            $connectionModel->getConfiguration(),
+        $configuration = $this->configurationFactory->create(
             $cache,
             $entityManagerConfig,
             $proxyConfig
@@ -66,7 +64,7 @@ final class EntityManagerFactory
 
         return new EntityManager(
             $connectionModel->getConnection(),
-            $connectionModel->getConfiguration(),
+            $configuration,
             $connectionModel->getEventManager()
         );
     }
