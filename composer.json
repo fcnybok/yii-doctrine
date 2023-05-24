@@ -22,7 +22,8 @@
         "psr/log": "^2|^3",
         "yiisoft/aliases": "^3.0",
         "yiisoft/injector": "^1.1",
-        "yiisoft/yii-console": "^2.0.1"
+        "yiisoft/yii-console": "^2.0.1",
+        "yiisoft/definitions": "^3.2"
     },
     "require-dev": {
         "doctrine/data-fixtures": "^1.6.6",

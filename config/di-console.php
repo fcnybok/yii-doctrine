@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use Doctrine\DBAL\Tools\Console\ConnectionProvider;
 use Doctrine\ORM\Tools\Console\EntityManagerProvider;
+use Yiisoft\Definitions\Reference;
 use Yiisoft\Yii\Doctrine\Dbal\Provider\DbalConnectionProvider;
-use Yiisoft\Yii\Doctrine\DoctrineManager;
 use Yiisoft\Yii\Doctrine\Fixture\Factory\FixtureFactory;
 use Yiisoft\Yii\Doctrine\Fixture\FixtureLoaderManager;
 use Yiisoft\Yii\Doctrine\Migrations\Factory\MigrationConfigurationFactory;
@@ -15,12 +15,9 @@ use Yiisoft\Yii\Doctrine\Orm\Provider\CustomerEntityManagerProvider;
 /** @var $params */
 
 return [
-    ConnectionProvider::class => fn(DoctrineManager $doctrineManager): ConnectionProvider => new DbalConnectionProvider(
-        $doctrineManager
-    ),
+    ConnectionProvider::class => Reference::to(DbalConnectionProvider::class),
 
-    EntityManagerProvider::class => fn(DoctrineManager $doctrineManager
-    ): EntityManagerProvider => new CustomerEntityManagerProvider($doctrineManager),
+    EntityManagerProvider::class => Reference::to(CustomerEntityManagerProvider::class),
 
     MigrationConfigurationManager::class => new MigrationConfigurationFactory(
         $params['yiisoft/yii-doctrine-migrations'] ?? []
