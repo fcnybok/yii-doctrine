@@ -10,24 +10,10 @@ use Yiisoft\Yii\Console\ExitCode;
 
 final class SyncMetadataCommand extends BaseMigrationCommand
 {
-    public function execute(InputInterface $input, OutputInterface $output): int
-    {
-        $this
-            ->getDependencyFactory()
-            ->getMetadataStorage()
-            ->ensureInitialized();
-
-        $this->io->success('Metadata storage synchronized');
-
-        return ExitCode::OK;
-    }
-
     protected function configure(): void
     {
-        parent::configure();
-
         $this
-            ->setName('doctrine/migrations/sync-metadata-storage')
+            ->setName('doctrine:migrations:sync-metadata-storage')
             ->setAliases(['sync-metadata-storage'])
             ->setDescription('Ensures that the metadata storage is at the latest version.')
             ->setHelp(
@@ -37,5 +23,19 @@ The <info>%command.name%</info> command updates metadata storage the latest vers
     <info>%command.full_name%</info>
 EOT
             );
+
+        parent::configure();
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $this
+            ->getDependencyFactory()
+            ->getMetadataStorage()
+            ->ensureInitialized();
+
+        $this->io->success('Metadata storage synchronized');
+
+        return ExitCode::OK;
     }
 }

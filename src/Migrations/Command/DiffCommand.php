@@ -32,10 +32,8 @@ final class DiffCommand extends BaseMigrationCommand
 {
     protected function configure(): void
     {
-        parent::configure();
-
         $this
-            ->setName('doctrine/migrations/diff')
+            ->setName('doctrine:migrations:diff')
             ->setAliases(['diff'])
             ->setDescription('Generate a migration by comparing your current database to your mapping information.')
             ->setHelp(
@@ -84,6 +82,8 @@ EOT
                 InputOption::VALUE_NONE,
                 'Generate a full migration as if the current database was empty.'
             );
+
+        parent::configure();
     }
 
     /**
@@ -177,12 +177,12 @@ EOT
                 sprintf('Generated new migration class to "<info>%s</info>"', $path),
                 '',
                 sprintf(
-                    'To run just this migration for testing purposes, you can use <info>doctrine/migrations/execute --up \'%s\'</info>',
+                    'To run just this migration for testing purposes, you can use <info>doctrine:migrations:execute --up \'%s\'</info>',
                     addslashes($fqcn)
                 ),
                 '',
                 sprintf(
-                    'To revert the migration you can use <info>doctrine/migrations/execute --down \'%s\'</info>',
+                    'To revert the migration you can use <info>doctrine:migrations:execute --down \'%s\'</info>',
                     addslashes($fqcn)
                 ),
                 '',

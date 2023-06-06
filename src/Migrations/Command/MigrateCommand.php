@@ -33,7 +33,7 @@ final class MigrateCommand extends BaseMigrationCommand
     protected function configure(): void
     {
         $this
-            ->setName('doctrine/migrations/migrate')
+            ->setName('doctrine:migrations:migrate')
             ->setAliases(['migrate'])
             ->setDescription(
                 'Execute a migration to a specified version or the latest available version.'

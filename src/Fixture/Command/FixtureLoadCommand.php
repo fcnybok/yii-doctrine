@@ -26,7 +26,7 @@ final class FixtureLoadCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('doctrine/fixture/load')
+            ->setName('doctrine:fixture:load')
             ->setDescription('Load fixture')
             ->addOption('em', 'e', InputOption::VALUE_REQUIRED, 'Entity manager name')
             ->setHelp(

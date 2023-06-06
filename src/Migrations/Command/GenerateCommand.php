@@ -23,7 +23,7 @@ final class GenerateCommand extends BaseMigrationCommand
     protected function configure(): void
     {
         $this
-            ->setName('doctrine/migrations/generate')
+            ->setName('doctrine:migrations:generate')
             ->setAliases(['generate'])
             ->setDescription('Generate a blank migration class.')
             ->addOption(
@@ -83,12 +83,12 @@ EOT
                 sprintf('Generated new migration class to "<info>%s</info>"', $path),
                 '',
                 sprintf(
-                    'To run just this migration for testing purposes, you can use <info>migrations:execute --up \'%s\'</info>',
+                    'To run just this migration for testing purposes, you can use <info>doctrine:migrations:execute --up \'%s\'</info>',
                     $fqcn
                 ),
                 '',
                 sprintf(
-                    'To revert the migration you can use <info>migrations:execute --down \'%s\'</info>',
+                    'To revert the migration you can use <info>doctrine:migrations:execute --down \'%s\'</info>',
                     $fqcn
                 ),
                 '',

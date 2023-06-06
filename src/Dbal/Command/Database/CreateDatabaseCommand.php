@@ -28,7 +28,7 @@ final class CreateDatabaseCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('doctrine/database/create')
+            ->setName('doctrine:database:create')
             ->setDescription('Creates the configured database')
             ->addOption('connection', 'c', InputOption::VALUE_OPTIONAL, 'The connection to use for this command')
             ->addOption(

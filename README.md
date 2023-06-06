@@ -25,12 +25,12 @@ Configuration params doctrine: dbal, orm, migrations, fixture example config pat
 
 Create database:
 ```bash
-php yii doctrine/database/create
+php yii doctrine:database:create
 ```
 
 Drop database:
 ```bash
-php yii doctrine/database/drop --if-exists --force
+php yii doctrine:database:drop --if-exists --force
 ```
 
 Dynamic create connection:
@@ -67,9 +67,9 @@ final class ConnectionService
 ```
 
 Command:
- - doctrine/dbal/run-sql
- - doctrine/database/create
- - doctrine/database/drop
+ - doctrine:dbal:run-sql
+ - doctrine:database:create
+ - doctrine:database:drop
 
 ### ORM
 
@@ -152,14 +152,14 @@ final class EntityManagerService
 ```
 
 Command:
- - doctrine/orm/info
- - doctrine/orm/generate-proxies
- - doctrine/orm/mapping-describe
- - doctrine/orm/run-dql
- - doctrine/orm/validate-schema
- - doctrine/orm/schema-tool/create
- - doctrine/orm/schema-tool/drop
- - doctrine/orm/schema-tool/update
+ - doctrine:orm:info
+ - doctrine:orm:generate-proxies
+ - doctrine:orm:mapping-describe
+ - doctrine:orm:run-dql
+ - doctrine:orm:validate-schema
+ - doctrine:orm:schema-tool:create
+ - doctrine:orm:schema-tool:drop
+ - doctrine:orm:schema-tool:update
 
 #### Cache
 
@@ -197,38 +197,38 @@ CacheItemPoolInterface::class => new \Symfony\Component\Cache\Adapter\ArrayAdapt
 ```
 
 Command:
- - doctrine/orm/clear-cache/metadata
- - doctrine/orm/clear-cache/query
- - doctrine/orm/clear-cache/result
+ - doctrine:orm:clear-cache:metadata
+ - doctrine:orm:clear-cache:query
+ - doctrine:orm:clear-cache:result
 
 
 ### Migrations
 Create migration:
 ```bash
-php yii doctrine/migrations/diff
+php yii doctrine:migrations:diff
 ```
 Multi configuration
 ```bash
-php yii doctrine/migrations/diff --configuration=mysql
+php yii doctrine:migrations:diff --configuration=mysql
 ```
 
 Migrate
 ```bash
-php yii doctrine/migrations/migrate
+php yii doctrine:migrations:migrate
 ```
 Command:
- - doctrine/migrations/current
- - doctrine/migrations/diff
- - doctrine/migrations/dump-schema
- - doctrine/migrations/execute
- - doctrine/migrations/generate
- - doctrine/migrations/latest
- - doctrine/migrations/list
- - doctrine/migrations/migrate
- - doctrine/migrations/rollup
- - doctrine/migrations/status
- - doctrine/migrations/sync-metadata-storage
- - doctrine/migrations/up-to-date
+ - doctrine:migrations:current
+ - doctrine:migrations:diff
+ - doctrine:migrations:dump-schema
+ - doctrine:migrations:execute
+ - doctrine:migrations:generate
+ - doctrine:migrations:latest
+ - doctrine:migrations:list
+ - doctrine:migrations:migrate
+ - doctrine:migrations:rollup
+ - doctrine:migrations:status
+ - doctrine:migrations:sync-metadata-storage
+ - doctrine:migrations:up-to-date
 
 ### Fixture
 
