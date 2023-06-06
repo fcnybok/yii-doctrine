@@ -26,7 +26,7 @@ final class ListCommand extends BaseMigrationCommand
     protected function configure(): void
     {
         $this
-            ->setName('doctrine/migrations/list')
+            ->setName('doctrine:migrations:list')
             ->setAliases(['list-migrations'])
             ->setDescription('Display a list of all available migrations and their status.')
             ->setHelp(

@@ -33,7 +33,7 @@ final class DropDatabaseCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('doctrine/database/drop')
+            ->setName('doctrine:database:drop')
             ->setDescription('Drops the configured database')
             ->addOption('connection', 'c', InputOption::VALUE_OPTIONAL, 'The connection to use for this command')
             ->addOption(

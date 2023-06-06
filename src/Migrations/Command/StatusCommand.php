@@ -17,7 +17,7 @@ final class StatusCommand extends BaseMigrationCommand
     protected function configure(): void
     {
         $this
-            ->setName('doctrine/migrations/status')
+            ->setName('doctrine:migrations:status')
             ->setAliases(['status'])
             ->setDescription('View the status of a set of migrations.')
             ->setHelp(

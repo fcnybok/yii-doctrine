@@ -30,7 +30,7 @@ final class UpToDateCommand extends BaseMigrationCommand
     protected function configure(): void
     {
         $this
-            ->setName('doctrine/migrations/up-to-date')
+            ->setName('doctrine:migrations:up-to-date')
             ->setAliases(['up-to-date'])
             ->setDescription('Tells you if your schema is up-to-date.')
             ->addOption(

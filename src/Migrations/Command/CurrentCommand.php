@@ -19,7 +19,7 @@ final class CurrentCommand extends BaseMigrationCommand
     protected function configure(): void
     {
         $this
-            ->setName('doctrine/migrations/current')
+            ->setName('doctrine:migrations:current')
             ->setAliases(['current'])
             ->setDescription('Outputs the current version');
 

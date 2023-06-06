@@ -29,7 +29,7 @@ final class ExecuteCommand extends BaseMigrationCommand
     protected function configure(): void
     {
         $this
-            ->setName('doctrine/migrations/execute')
+            ->setName('doctrine:migrations:execute')
             ->setAliases(['execute'])
             ->setDescription(
                 'Execute one or more migration versions up or down manually.'

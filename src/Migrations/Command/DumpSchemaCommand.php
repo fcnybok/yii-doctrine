@@ -24,10 +24,48 @@ use function sprintf;
  */
 final class DumpSchemaCommand extends BaseMigrationCommand
 {
+    protected function configure(): void
+    {
+        $this
+            ->setName('doctrine:migrations:dump-schema')
+            ->setAliases(['dump-schema'])
+            ->setDescription('Dump the schema for your database to a migration.')
+            ->setHelp(
+                <<<EOT
+The <info>%command.name%</info> command dumps the schema for your database to a migration:
+
+    <info>%command.full_name%</info>
+
+After dumping your schema to a migration, you can rollup your migrations using the <info>migrations:rollup</info> command.
+EOT
+            )
+            ->addOption(
+                'namespace',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Namespace to use for the generated migrations (defaults to the first namespace definition).'
+            )
+            ->addOption(
+                'filter-tables',
+                null,
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                'Filter the tables to dump via Regex.'
+            )
+            ->addOption(
+                'line-length',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Max line length of unformatted lines.',
+                '120'
+            );
+
+        parent::configure();
+    }
+
     /**
      * @throws SchemaDumpRequiresNoMigrations
      */
-    public function execute(
+    protected function execute(
         InputInterface $input,
         OutputInterface $output
     ): int {
@@ -96,43 +134,5 @@ final class DumpSchemaCommand extends BaseMigrationCommand
                 throw SchemaDumpRequiresNoMigrations::new($namespace);
             }
         }
-    }
-
-    protected function configure(): void
-    {
-        parent::configure();
-
-        $this
-            ->setName('doctrine/migrations/dump-schema')
-            ->setAliases(['dump-schema'])
-            ->setDescription('Dump the schema for your database to a migration.')
-            ->setHelp(
-                <<<EOT
-The <info>%command.name%</info> command dumps the schema for your database to a migration:
-
-    <info>%command.full_name%</info>
-
-After dumping your schema to a migration, you can rollup your migrations using the <info>migrations:rollup</info> command.
-EOT
-            )
-            ->addOption(
-                'namespace',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'Namespace to use for the generated migrations (defaults to the first namespace definition).'
-            )
-            ->addOption(
-                'filter-tables',
-                null,
-                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'Filter the tables to dump via Regex.'
-            )
-            ->addOption(
-                'line-length',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Max line length of unformatted lines.',
-                '120'
-            );
     }
 }

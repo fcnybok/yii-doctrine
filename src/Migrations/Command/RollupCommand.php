@@ -18,10 +18,8 @@ final class RollupCommand extends BaseMigrationCommand
 {
     protected function configure(): void
     {
-        parent::configure();
-
         $this
-            ->setName('doctrine/migrations/rollup')
+            ->setName('doctrine:migrations:rollup')
             ->setAliases(['rollup'])
             ->setDescription(
                 'Rollup migrations by deleting all tracked versions and insert the one version that exists.'
@@ -36,6 +34,8 @@ inserts the one version that exists that was created with the <info>migrations:d
 To dump your schema to a migration version you can use the <info>migrations:dump-schema</info> command.
 EOT
             );
+
+        parent::configure();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

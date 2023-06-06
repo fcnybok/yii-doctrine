@@ -19,7 +19,7 @@ final class LatestCommand extends BaseMigrationCommand
     protected function configure(): void
     {
         $this
-            ->setName('doctrine/migrations/latest')
+            ->setName('doctrine:migrations:latest')
             ->setAliases(['latest'])
             ->setDescription('Outputs the latest version');
 
