@@ -76,10 +76,11 @@ Command:
 If need default entity manager add on di.php
 
 ```php
-EntityManagerInterface::class => fn(DoctrineManager $doctrineManager
-    ): EntityManagerInterface => $doctrineManager->getManager(
+EntityManagerInterface::class => fn(
+    DoctrineManager $doctrineManager
+): EntityManagerInterface => $doctrineManager->getManager(
         $params['yiisoft/yii-doctrine']['orm']['default_entity_manager'] ?? DoctrineManager::DEFAULT_ENTITY_MANAGER
-    ),
+   ),
 ```
 
 Use default entity manager:
@@ -201,7 +202,6 @@ Command:
  - doctrine:orm:clear-cache:query
  - doctrine:orm:clear-cache:result
 
-
 ### Migrations
 Create migration:
 ```bash
@@ -232,7 +232,11 @@ Command:
 
 ### Fixture
 
+Command:
+ - doctrine:fixture:load
+
 Load fixture:
-```php
-php yii doctrine/fixture/load --em=default
+
+```bash
+php yii doctrine:fixture:load --em=default
 ```

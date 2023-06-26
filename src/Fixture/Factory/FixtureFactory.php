@@ -14,30 +14,31 @@ use Yiisoft\Yii\Doctrine\Fixture\FixtureLoaderManager;
 final class FixtureFactory
 {
     public function __construct(
-        /** @psalm-var array{
-         *     entity_managers: array<string, array{
-         *          dirs: array<string>|empty,
-         *          files: array<string>|empty,
-         *          classes: array<class-string<FixtureInterface>>|empty
-         *     }>
-         *  } $fixtureConfig
-         *
-         */
-        private readonly array $fixtureConfig,
+        private readonly Aliases $aliases,
+        private readonly Injector $injector,
     ) {
     }
 
-    public function __invoke(Aliases $aliases, Injector $injector): FixtureLoaderManager
+    /**
+     * @psalm-param array{
+     *     entity_managers: array<string, array{
+     *          dirs: array<string>|empty,
+     *          files: array<string>|empty,
+     *          classes: array<class-string<FixtureInterface>>|empty
+     *     }>
+     *  } $fixtureConfig
+     */
+    public function create(array $fixtureConfig): FixtureLoaderManager
     {
         $fixtureLoaders = [];
 
-        if (!empty($this->fixtureConfig['entity_managers'])) {
-            foreach ($this->fixtureConfig['entity_managers'] as $entityManagerName => $fixtureConfig) {
+        if (!empty($fixtureConfig['entity_managers'])) {
+            foreach ($fixtureConfig['entity_managers'] as $entityManagerName => $config) {
                 $loader = new Loader();
 
-                $this->loadClasses($injector, $loader, $fixtureConfig['classes'] ?? []);
-                $this->loadDirs($aliases, $loader, $fixtureConfig['dirs'] ?? []);
-                $this->loadFiles($aliases, $loader, $fixtureConfig['files']);
+                $this->loadClasses($loader, $config['classes'] ?? []);
+                $this->loadDirs($loader, $config['dirs'] ?? []);
+                $this->loadFiles($loader, $config['files']);
 
                 $fixtureLoaders[$entityManagerName] = $loader;
             }
@@ -49,10 +50,10 @@ final class FixtureFactory
     /**
      * @psalm-param array<class-string<FixtureInterface>> $classes
      */
-    private function loadClasses(Injector $injector, Loader $loader, array $classes): void
+    private function loadClasses(Loader $loader, array $classes): void
     {
         foreach ($classes as $classFixture) {
-            $fixture = $injector->make($classFixture);
+            $fixture = $this->injector->make($classFixture);
 
             if (!$fixture instanceof FixtureInterface) {
                 throw new RuntimeException(
@@ -67,20 +68,20 @@ final class FixtureFactory
     /**
      * @psalm-param array<string>|array<empty> $dirs
      */
-    private function loadDirs(Aliases $aliases, Loader $loader, array $dirs): void
+    private function loadDirs(Loader $loader, array $dirs): void
     {
         foreach ($dirs as $dir) {
-            $loader->loadFromDirectory($aliases->get($dir));
+            $loader->loadFromDirectory($this->aliases->get($dir));
         }
     }
 
     /**
      * @psalm-param array<string>|array<empty> $files
      */
-    private function loadFiles(Aliases $aliases, Loader $loader, array $files): void
+    private function loadFiles(Loader $loader, array $files): void
     {
         foreach ($files as $file) {
-            $loader->loadFromFile($aliases->get($file));
+            $loader->loadFromFile($this->aliases->get($file));
         }
     }
 }

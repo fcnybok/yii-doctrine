@@ -34,3 +34,22 @@
 ## 1.0.7
 
 - Fix: Update command name
+
+## 1.0.8
+
+Update:
+
+Class [DoctrineManagerFactory](src/Factory/DoctrineManagerFactory.php)
+- Add method `create`
+- Remove method `__invoke`
+
+Class [MigrationConfigurationFactory](src/Migrations/Factory/MigrationConfigurationFactory.php)
+- Add method `create`
+- Remove method `__invoke`
+
+Class [FixtureLoaderManager](src/Fixture/FixtureLoaderManager.php)
+- Add method `create`
+- Remove method `__invoke`
+
+File [di.php](config/di.php)
+File [di-console.php](config/di-console.php)
