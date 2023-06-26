@@ -19,9 +19,13 @@ return [
 
     EntityManagerProvider::class => Reference::to(CustomerEntityManagerProvider::class),
 
-    MigrationConfigurationManager::class => new MigrationConfigurationFactory(
+    MigrationConfigurationManager::class => static fn(
+        MigrationConfigurationFactory $migrationConfigurationFactory
+    ): MigrationConfigurationManager => $migrationConfigurationFactory->create(
         $params['yiisoft/yii-doctrine-migrations'] ?? []
     ),
 
-    FixtureLoaderManager::class => new FixtureFactory($params['yiisoft/yii-doctrine-fixture'] ?? []),
+    FixtureLoaderManager::class => static fn(
+        FixtureFactory $fixtureFactory
+    ): FixtureLoaderManager => $fixtureFactory->create($params['yiisoft/yii-doctrine-fixture'] ?? []),
 ];

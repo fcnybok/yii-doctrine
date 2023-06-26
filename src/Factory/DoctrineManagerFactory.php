@@ -17,29 +17,28 @@ use function sprintf;
 final class DoctrineManagerFactory
 {
     public function __construct(
-        private readonly array $doctrineConfig,
+        private readonly ConnectionFactory $connectionFactory,
+        private readonly EntityManagerFactory $entityManagerFactory,
+        private readonly CacheItemPoolInterface $cacheDriver = new NullAdapter(),
     ) {
     }
 
-    public function __invoke(
-        ConnectionFactory $connectionFactory,
-        EntityManagerFactory $entityManagerFactory,
-        CacheItemPoolInterface $cacheDriver = new NullAdapter(),
-    ): DoctrineManager {
+    public function create(array $doctrineConfig): DoctrineManager
+    {
         // init connections
         $connections = [];
 
-        if (!empty($this->doctrineConfig['dbal'])) {
-            foreach ($this->doctrineConfig['dbal'] as $name => $dbalConfig) {
-                $connections[$name] = $connectionFactory->create($dbalConfig);
+        if (!empty($doctrineConfig['dbal'])) {
+            foreach ($doctrineConfig['dbal'] as $name => $dbalConfig) {
+                $connections[$name] = $this->connectionFactory->create($dbalConfig);
             }
         }
 
         // init entity managers
         $entityManagers = [];
 
-        if (!empty($this->doctrineConfig['orm']['entity_managers'])) {
-            foreach ($this->doctrineConfig['orm']['entity_managers'] as $name => $entityManagerConfig) {
+        if (!empty($doctrineConfig['orm']['entity_managers'])) {
+            foreach ($doctrineConfig['orm']['entity_managers'] as $name => $entityManagerConfig) {
                 $connectionName = $entityManagerConfig['connection'] ?? null;
 
                 if (null === $connectionName) {
@@ -57,11 +56,11 @@ final class DoctrineManagerFactory
                     );
                 }
 
-                $entityManagers[$name] = $entityManagerFactory->create(
+                $entityManagers[$name] = $this->entityManagerFactory->create(
                     $connectionModel,
-                    $cacheDriver,
+                    $this->cacheDriver,
                     $entityManagerConfig,
-                    $this->doctrineConfig['orm']['proxies'] ?? []
+                    $doctrineConfig['orm']['proxies'] ?? []
                 );
             }
         }
