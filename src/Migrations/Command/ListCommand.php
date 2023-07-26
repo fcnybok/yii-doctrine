@@ -47,6 +47,7 @@ EOT
                 ->getDependencyFactory()
                 ->getMigrationPlanCalculator()
                 ->getMigrations(), // available migrations
+
             $this
                 ->getDependencyFactory()
                 ->getMetadataStorage()

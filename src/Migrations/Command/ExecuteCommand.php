@@ -140,6 +140,7 @@ EOT
 
         /** @psalm-var array<array-key, string>|array<empty> $versions */
         $versions = $input->getArgument('versions');
+
         $direction = $input->getOption('down') !== false
             ? Direction::DOWN
             : Direction::UP;

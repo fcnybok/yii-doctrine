@@ -136,8 +136,7 @@ EOT
         if (!$this->checkNewMigrationsOrExecutedUnavailable(
             $newMigrations,
             $executedUnavailableMigrations,
-            $input,
-            $output
+            $input
         )) {
             $this->io->error('Migration cancelled!');
 
@@ -195,8 +194,7 @@ EOT
     private function checkNewMigrationsOrExecutedUnavailable(
         AvailableMigrationsList $newMigrations,
         ExecutedMigrationsList $executedUnavailableMigrations,
-        InputInterface $input,
-        OutputInterface $output
+        InputInterface $input
     ): bool {
         if (count($newMigrations) === 0 && count($executedUnavailableMigrations) === 0) {
             return true;

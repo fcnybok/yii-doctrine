@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Doctrine\DBAL\Schema\Sequence;
 use Doctrine\ORM\Events;
 use Yiisoft\Yii\Doctrine\DoctrineManager;
 use Yiisoft\Yii\Doctrine\Orm\Enum\DriverMappingEnum;
@@ -30,9 +31,13 @@ return [
                     ]
                 ],
                 'auto_commit' => false,
-                'schema_assets_filter' => static function (): bool {
-                    return true;
-                },
+//                'schema_assets_filter' => static function (string|Sequence $table): bool {
+//                    if (is_string($table)) {
+//                        return $table === 'geo_locations';
+//                    }
+//
+//                    return true;
+//                },
                 'middlewares' => [
                     // logger middleware
                     Doctrine\DBAL\Logging\Middleware::class
@@ -62,6 +67,8 @@ return [
 //                  'class_metadata_factory_name' => 'MetadataFactory::class',
 //                  'default_repository_class' => 'DefaultRepository::class',
 //                  'schema_ignore_classes' => [],
+//                  'entity_listener_resolver' => DefaultEntityListenerResolver::class,
+//                  'typed_field_mapper' => DefaultTypedFieldMapper::class,
                     'mappings' => [
                         'User' => [
                             'dir' => '@src/User/Entity',

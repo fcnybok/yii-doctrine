@@ -23,6 +23,7 @@ use function is_dir;
 use function is_string;
 use function is_writable;
 use function sprintf;
+use function str_starts_with;
 
 /**
  * The MigrateCommand class is responsible for executing a migration from the current version to another
@@ -141,6 +142,7 @@ EOT
             'WARNING! You are about to execute a migration in database "%s" that could result in schema changes and data loss. Are you sure you wish to continue?',
             $databaseName === '' ? '<unnamed>' : $databaseName
         );
+
         if (!$migratorConfiguration->isDryRun() && !$this->canExecute($question, $input)) {
             $this->io->error('Migration cancelled!');
 
@@ -152,12 +154,13 @@ EOT
             ->getMetadataStorage()
             ->ensureInitialized();
 
-        /** @psalm-var bool $allowNoMigration */
+        /** @var bool $allowNoMigration */
         $allowNoMigration = $input->getOption('allow-no-migration');
-        /** @psalm-var string $versionAlias */
+
+        /** @var string $versionAlias */
         $versionAlias = $input->getArgument('version');
 
-        /** @psalm-var string|bool $path */
+        /** @var string|bool $path */
         $path = $input->getOption('write-sql') ?? getcwd();
 
         if (is_string($path) && !$this->isPathWritable($path)) {
@@ -166,7 +169,10 @@ EOT
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
-        $migrationRepository = $this->getDependencyFactory()->getMigrationRepository();
+        $migrationRepository = $this
+            ->getDependencyFactory()
+            ->getMigrationRepository();
+
         if (count($migrationRepository->getMigrations()) === 0) {
             $message = sprintf(
                 'The version "%s" couldn\'t be reached, there are no registered migrations.',

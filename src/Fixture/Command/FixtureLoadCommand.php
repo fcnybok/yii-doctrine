@@ -14,6 +14,8 @@ use Yiisoft\Yii\Console\ExitCode;
 use Yiisoft\Yii\Doctrine\DoctrineManager;
 use Yiisoft\Yii\Doctrine\Fixture\FixtureLoaderManager;
 
+use function sprintf;
+
 final class FixtureLoadCommand extends Command
 {
     public function __construct(

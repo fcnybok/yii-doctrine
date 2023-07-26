@@ -9,6 +9,8 @@ use Doctrine\Common\EventSubscriber;
 use RuntimeException;
 use Yiisoft\Injector\Injector;
 
+use function sprintf;
+
 final class EventManagerFactory
 {
     public function __construct(

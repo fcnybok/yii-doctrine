@@ -37,7 +37,7 @@
 
 ## 1.0.8
 
-Update:
+#### Update:
 
 Class [DoctrineManagerFactory](src/Factory/DoctrineManagerFactory.php)
 - Add method `create`
@@ -53,3 +53,14 @@ Class [FixtureLoaderManager](src/Fixture/FixtureLoaderManager.php)
 
 File [di.php](config/di.php)
 File [di-console.php](config/di-console.php)
+
+## 1.0.9
+Add configure params for entity manager `entity_listener_resolver` and `typed_field_mapper`, 
+fix code.
+
+#### Update:
+
+Class [ConfigurationFactory](src/Orm/Factory/ConfigurationFactory.php)
+- Add methods `configureEntityListenerResolver` and `configureTypedFieldMapper`
+
+File [example.php](config/example.php)

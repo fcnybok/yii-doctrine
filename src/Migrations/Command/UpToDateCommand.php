@@ -74,6 +74,7 @@ EOT
         }
 
         $exitCode = ExitCode::OK;
+
         if ($newMigrationsCount > 0) {
             $this->io->error(
                 sprintf(

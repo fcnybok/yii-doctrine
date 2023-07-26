@@ -7,6 +7,8 @@ namespace Yiisoft\Yii\Doctrine\Orm\Factory;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Internal\Hydration\AbstractHydrator;
+use Doctrine\ORM\Mapping\EntityListenerResolver;
+use Doctrine\ORM\Mapping\TypedFieldMapper;
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 use Psr\Cache\CacheItemPoolInterface;
@@ -39,6 +41,8 @@ final class DynamicEntityManagerFactory
      *     default_repository_class: class-string<EntityRepository<object>>|empty,
      *     custom_hydration_modes: array<string, class-string<AbstractHydrator>>|empty,
      *     filters: array<string, class-string<SQLFilter>>|empty,
+     *     entity_listener_resolver: class-string<EntityListenerResolver>|empty,
+     *     typed_field_mapper: class-string<TypedFieldMapper>|empty,
      *     mappings: array<string, array{dir: string, driver: enum-string, namespace: string, fileExtension: string|empty}>|empty,
      *     events: array|empty,
      *     connection: string
