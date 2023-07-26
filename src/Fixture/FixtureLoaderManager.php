@@ -7,12 +7,15 @@ namespace Yiisoft\Yii\Doctrine\Fixture;
 use Doctrine\Common\DataFixtures\Loader;
 use RuntimeException;
 
+use function sprintf;
+
 final class FixtureLoaderManager
 {
     public function __construct(
         /** @var Loader[] */
-        private readonly array $loaders,
+        private array $loaders,
     ) {
+        $this->loaders = [];
     }
 
     public function getLoader(string $entityManagerName): Loader
@@ -20,7 +23,9 @@ final class FixtureLoaderManager
         $loader = $this->loaders[$entityManagerName] ?? null;
 
         if (null === $loader) {
-            throw new RuntimeException(sprintf('Not found loader by name entity manager "%s"', $entityManagerName));
+            throw new RuntimeException(
+                sprintf('Not found loader by name entity manager "%s"', $entityManagerName)
+            );
         }
 
         return $loader;

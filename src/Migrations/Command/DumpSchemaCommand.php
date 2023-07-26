@@ -79,6 +79,7 @@ EOT
             ->getDependencyFactory()
             ->getConfiguration();
 
+        /** @var string|null $namespace */
         $namespace = $input->getOption('namespace');
 
         if ($namespace === null) {

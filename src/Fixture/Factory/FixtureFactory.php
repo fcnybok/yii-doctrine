@@ -11,6 +11,8 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\Injector\Injector;
 use Yiisoft\Yii\Doctrine\Fixture\FixtureLoaderManager;
 
+use function sprintf;
+
 final class FixtureFactory
 {
     public function __construct(

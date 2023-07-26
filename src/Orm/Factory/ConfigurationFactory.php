@@ -9,8 +9,10 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Internal\Hydration\AbstractHydrator;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver;
+use Doctrine\ORM\Mapping\EntityListenerResolver;
 use Doctrine\ORM\Mapping\NamingStrategy;
 use Doctrine\ORM\Mapping\QuoteStrategy;
+use Doctrine\ORM\Mapping\TypedFieldMapper;
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
@@ -47,6 +49,8 @@ final class ConfigurationFactory
      *     default_repository_class: class-string<EntityRepository<object>>|empty,
      *     custom_hydration_modes: array<string, class-string<AbstractHydrator>>|empty,
      *     filters: array<string, class-string<SQLFilter>>|empty,
+     *     entity_listener_resolver: class-string<EntityListenerResolver>|empty,
+     *     typed_field_mapper: class-string<TypedFieldMapper>|empty,
      *     mappings: array<string, array{dir: string, driver: enum-string, namespace: string, fileExtension: string|empty}>|empty,
      *     events: array|empty,
      *     connection: string
@@ -80,35 +84,44 @@ final class ConfigurationFactory
         );
         $configuration->setAutoGenerateProxyClasses($proxyConfig['auto_generate'] ?? true);
 
+        // configure schema ignore classes
         $this->configureSchemaIgnoreClasses($configuration, $ormConfig['schema_ignore_classes'] ?? []);
 
-        // init custom datetime function
+        // configure custom datetime function
         $this->configureCustomDatetimeFunctions(
             $configuration,
             $ormConfig['dql']['custom_datetime_functions'] ?? []
         );
-        // init custom numeric function
+        // configure custom numeric function
         $this->configureCustomNumericFunctions(
             $configuration,
             $ormConfig['dql']['custom_numeric_functions'] ?? []
         );
-        // init custom string function
+        // configure custom string function
         $this->configureCustomStringFunctions(
             $configuration,
             $ormConfig['dql']['custom_string_functions'] ?? []
         );
 
+        // configure class metadata factory
         $this->configureClassMetadataFactoryName($configuration, $ormConfig['class_metadata_factory_name'] ?? null);
 
+        // configure default repository class
         $this->configureDefaultRepositoryClass($configuration, $ormConfig['default_repository_class'] ?? null);
 
-        // init custom hydration modes
+        // configure custom hydration modes
         $this->configureCustomHydrationModes($configuration, $ormConfig['custom_hydration_modes'] ?? []);
 
-        // init filters
+        // configure filters
         $this->configureFilters($configuration, $ormConfig['filters'] ?? []);
 
-        // init meta data drivers
+        // configure entityListenerResolver
+        $this->configureEntityListenerResolver($configuration, $ormConfig['entity_listener_resolver'] ?? null);
+
+        // configure typed field mapper
+        $this->configureTypedFieldMapper($configuration, $ormConfig['typed_field_mapper'] ?? null);
+
+        // configure meta data drivers
         $this->configureMetaDataDrivers($configuration, $ormConfig['mappings'] ?? []);
 
         return $configuration;
@@ -259,6 +272,48 @@ final class ConfigurationFactory
     }
 
     /**
+     * @psalm-param class-string<EntityListenerResolver>|empty $entityListenerResolverClass
+     */
+    private function configureEntityListenerResolver(
+        Configuration $configuration,
+        ?string $entityListenerResolverClass
+    ): void {
+        if (null === $entityListenerResolverClass) {
+            return;
+        }
+
+        $entityListenerResolver = $this->injector->make($entityListenerResolverClass);
+
+        if (!$entityListenerResolver instanceof EntityListenerResolver) {
+            throw new RuntimeException(
+                sprintf('Class %s not instance %s', $entityListenerResolverClass, EntityListenerResolver::class)
+            );
+        }
+
+        $configuration->setEntityListenerResolver($entityListenerResolver);
+    }
+
+    /**
+     * @psalm-param class-string<TypedFieldMapper>|empty $typedFieldMapperClass
+     */
+    private function configureTypedFieldMapper(Configuration $configuration, ?string $typedFieldMapperClass): void
+    {
+        if (null === $typedFieldMapperClass) {
+            return;
+        }
+
+        $typedFieldMapper = $this->injector->make($typedFieldMapperClass);
+
+        if (!$typedFieldMapper instanceof TypedFieldMapper) {
+            throw new RuntimeException(
+                sprintf('Class %s not instance %s', $typedFieldMapperClass, EntityListenerResolver::class)
+            );
+        }
+
+        $configuration->setTypedFieldMapper($typedFieldMapper);
+    }
+
+        /**
      * @psalm-param array<string, array{dir: string, driver: enum-string, namespace: string, fileExtension: string|empty}>|empty $mappings
      */
     private function configureMetaDataDrivers(Configuration $configuration, array $mappings): void

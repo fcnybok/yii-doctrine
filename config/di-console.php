@@ -12,7 +12,7 @@ use Yiisoft\Yii\Doctrine\Migrations\Factory\MigrationConfigurationFactory;
 use Yiisoft\Yii\Doctrine\Migrations\MigrationConfigurationManager;
 use Yiisoft\Yii\Doctrine\Orm\Provider\CustomerEntityManagerProvider;
 
-/** @var $params */
+/** @var array $params */
 
 return [
     ConnectionProvider::class => Reference::to(DbalConnectionProvider::class),
