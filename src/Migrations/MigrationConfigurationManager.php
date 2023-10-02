@@ -7,6 +7,8 @@ namespace Yiisoft\Yii\Doctrine\Migrations;
 use Doctrine\Migrations\Configuration\Configuration;
 use RuntimeException;
 
+use function sprintf;
+
 final class MigrationConfigurationManager
 {
     public const DEFAULT_CONFIGURATION = 'default';

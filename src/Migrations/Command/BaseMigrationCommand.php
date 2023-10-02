@@ -30,9 +30,8 @@ class BaseMigrationCommand extends Command
         private readonly DoctrineManager $doctrineManager,
         private readonly MigrationConfigurationManager $migrationConfigurationManager,
         private readonly LoggerInterface $logger = new NullLogger(),
-        string $name = null,
     ) {
-        parent::__construct($name);
+        parent::__construct();
     }
 
 
