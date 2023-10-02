@@ -105,6 +105,7 @@ return [
                     ],
                 ],
                 'mysql' => [
+                    'connection' => 'mysql',
                     'mappings' => [
                         'User' => [
                             'dir' => '@src/Mysql/User/Entity',

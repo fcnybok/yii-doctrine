@@ -13,8 +13,8 @@ use function sprintf;
 final class DynamicConnectionFactory
 {
     public function __construct(
-        private readonly DoctrineManager $doctrineManager,
         private readonly ConnectionFactory $connectionFactory,
+        private readonly DoctrineManager $doctrineManager,
     ) {
     }
 

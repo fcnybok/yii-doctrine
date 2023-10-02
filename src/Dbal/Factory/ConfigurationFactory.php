@@ -31,8 +31,8 @@ final class ConfigurationFactory
         $configuration = new Configuration();
 
         $middlewares = array_map(
-            function ($middleware): Middleware {
-                return $this->injector->make($middleware);
+            function (string $classMiddleware): Middleware {
+                return $this->injector->make($classMiddleware);
             },
             $dbalConfig['middlewares'] ?? []
         );
