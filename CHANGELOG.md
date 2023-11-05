@@ -1,5 +1,11 @@
 # Yii3 Doctrine Change Log
 
+## 1.0.11
+
+feat: Add reset entity manager for RoadRunner application
+
+File [di-console.php](config/di.php)
+
 ## 1.0.10
 
 Update dependency, DI console
