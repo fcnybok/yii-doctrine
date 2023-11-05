@@ -16,6 +16,9 @@ use Yiisoft\Yii\Doctrine\Fixture\FixtureLoaderManager;
 
 use function sprintf;
 
+/**
+ * @deprecated This functionality move on package fcnybok/yii-doctrine-fixture on release-1.1.0
+ */
 final class FixtureLoadCommand extends Command
 {
     public function __construct(
