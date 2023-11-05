@@ -8,7 +8,12 @@ use Yiisoft\Yii\Doctrine\Factory\DoctrineManagerFactory;
 /** @var array $params */
 
 return [
-    DoctrineManager::class => static fn(
-        DoctrineManagerFactory $doctrineManagerFactory
-    ): DoctrineManager => $doctrineManagerFactory->create($params['yiisoft/yii-doctrine'] ?? []),
+    DoctrineManager::class => [
+        'definition' => static fn(
+            DoctrineManagerFactory $doctrineManagerFactory
+        ): DoctrineManager => $doctrineManagerFactory->create($params['yiisoft/yii-doctrine'] ?? []),
+        'reset' => function (): void {
+            $this->resetAllManager();
+        },
+    ],
 ];
