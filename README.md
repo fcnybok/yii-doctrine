@@ -229,14 +229,10 @@ Command:
  - doctrine:migrations:status
  - doctrine:migrations:sync-metadata-storage
  - doctrine:migrations:up-to-date
+ - doctrine:migrations:version
 
 ### Fixture
-
-Command:
- - doctrine:fixture:load
-
-Load fixture:
-
+If need fixture, install package
 ```bash
-php yii doctrine:fixture:load --em=default
+composer require fcnybok/yii-doctrine-fixture --dev
 ```
