@@ -1,25 +1,40 @@
 # Yii3 Doctrine Change Log
 
+## 1.1.0
+
+#### Feat: 
+1. Move fixture on package `fcnybok/yii-doctrine-fixture`.
+2. Add command for migration `doctrine:migrations:version`.
+3. Update dependency.
+4. Small fix code. 
+
+#### Update: 
+File [di-console.php](config/di.php), [params](config/params.php)
+
+Add [VersionCommand.php](src/Migrations/Command/VersionCommand.php)
+
 ## 1.0.11
 
-feat: Add reset entity manager for RoadRunner application
+#### Feat: 
+Add reset entity manager for RoadRunner application.
 
+#### Update:
 File [di-console.php](config/di.php)
 
 ## 1.0.10
 
+#### Fix:
 Update dependency, DI console
 
-File [di-console.php](config/di-console.php)
+#### Update:
+File: [di-console.php](config/di-console.php)
 
 ## 1.0.9
-Add configure params for entity manager `entity_listener_resolver` and `typed_field_mapper`,
-fix code.
+#### Feat: 
+Add configure params for entity manager `entity_listener_resolver` and `typed_field_mapper`, fix code.
 
 #### Update:
-
-Class [ConfigurationFactory](src/Orm/Factory/ConfigurationFactory.php)
-- Add methods `configureEntityListenerResolver` and `configureTypedFieldMapper`
+Class [ConfigurationFactory](src/Orm/Factory/ConfigurationFactory.php) add methods `configureEntityListenerResolver` and `configureTypedFieldMapper`
 
 File [example.php](config/example.php)
 

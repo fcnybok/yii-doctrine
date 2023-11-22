@@ -16,7 +16,6 @@ use Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand;
 use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand;
 use Yiisoft\Yii\Doctrine\Dbal\Command\Database\CreateDatabaseCommand;
 use Yiisoft\Yii\Doctrine\Dbal\Command\Database\DropDatabaseCommand;
-use Yiisoft\Yii\Doctrine\Fixture\Command\FixtureLoadCommand;
 use Yiisoft\Yii\Doctrine\Migrations\Command\CurrentCommand;
 use Yiisoft\Yii\Doctrine\Migrations\Command\DiffCommand;
 use Yiisoft\Yii\Doctrine\Migrations\Command\DumpSchemaCommand;
@@ -29,6 +28,7 @@ use Yiisoft\Yii\Doctrine\Migrations\Command\RollupCommand;
 use Yiisoft\Yii\Doctrine\Migrations\Command\StatusCommand;
 use Yiisoft\Yii\Doctrine\Migrations\Command\SyncMetadataCommand;
 use Yiisoft\Yii\Doctrine\Migrations\Command\UpToDateCommand;
+use Yiisoft\Yii\Doctrine\Migrations\Command\VersionCommand;
 
 return [
     'yiisoft/yii-console' => [
@@ -63,11 +63,9 @@ return [
             'doctrine:migrations:status' => StatusCommand::class,
             'doctrine:migrations:sync-metadata-storage' => SyncMetadataCommand::class,
             'doctrine:migrations:up-to-date' => UpToDateCommand::class,
-            // fixture
-            'doctrine:fixture:load' => FixtureLoadCommand::class,
+            'doctrine:migrations:version' => VersionCommand::class
         ],
     ],
     'yiisoft/yii-doctrine' => [],
     'yiisoft/yii-doctrine-migrations' => [],
-    'yiisoft/yii-doctrine-fixture' => [],
 ];

@@ -138,10 +138,7 @@ EOT
             ->getDependencyFactory()
             ->getVersionComparator();
 
-        uasort(
-            $versions,
-            static fn(Version $a, Version $b): int => $comparator->compare($a, $b)
-        );
+        uasort($versions, $comparator->compare(...));
 
         return $versions;
     }

@@ -315,10 +315,8 @@ EOT
                 $this->io->text(
                     sprintf(
                         '<comment>>></comment> %s (<comment>%s</comment>)',
-                        $executedUnavailableMigration->getExecutedAt() !== null
-                            ? $executedUnavailableMigration->getExecutedAt()->format('Y-m-d H:i:s')
-                            : '',
-                        (string)$executedUnavailableMigration->getVersion()
+                        $executedUnavailableMigration->getExecutedAt()?->format('Y-m-d H:i:s'),
+                        $executedUnavailableMigration->getVersion()
                     )
                 );
             }
