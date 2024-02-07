@@ -1,5 +1,11 @@
 # Yii3 Doctrine Change Log
 
+## 2.0.0
+### Feat:
+1. Support doctrine ORM 3.
+2. Add configure params for entity manager `default_query_hints`, `repository_factory`, `fetch_mode_sub_select_batch_size`.
+3. Small fix code.
+
 ## 1.1.0
 
 #### Feat: 

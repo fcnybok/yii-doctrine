@@ -13,7 +13,6 @@ use Doctrine\Persistence\ObjectRepository;
 use Doctrine\Persistence\Proxy;
 use ReflectionClass;
 use RuntimeException;
-use Yiisoft\Yii\Doctrine\Dbal\Model\ConnectionModel;
 
 use function array_keys;
 use function sprintf;
@@ -27,8 +26,8 @@ final class DoctrineManager implements ManagerRegistry
     private string $proxyInterfaceName = Proxy::class;
 
     /**
-     * @param ConnectionModel[] $connections
-     * @param EntityManagerInterface[] $managers
+     * @psalm-param array<string, object<Connection>> $connections
+     * @psalm-param array<string, object<EntityManagerInterface>> $managers
      */
     public function __construct(
         private array $connections,
@@ -38,24 +37,24 @@ final class DoctrineManager implements ManagerRegistry
     ) {
     }
 
-    public function addConnection(string $name, ConnectionModel $connectionModel): void
+    public function addConnection(string $name, Connection $connection): void
     {
         if (isset($this->connections[$name])) {
             throw new RuntimeException(sprintf('Connection by name "%s" already exists', $name));
         }
 
-        $this->connections[$name] = $connectionModel;
+        $this->connections[$name] = $connection;
     }
 
     public function closeConnection(string $name): void
     {
-        $connectionModel = $this->connections[$name] ?? null;
+        $connection = $this->connections[$name] ?? null;
 
-        if (null === $connectionModel) {
+        if (null === $connection) {
             throw new RuntimeException(sprintf('Connection by name "%s" already is not exists', $name));
         }
 
-        $connectionModel->getConnection()->close();
+        $connection->close();
 
         unset($this->connections[$name]);
     }
@@ -66,13 +65,13 @@ final class DoctrineManager implements ManagerRegistry
             $name = $this->getDefaultConnectionName();
         }
 
-        $connectionModel = $this->connections[$name] ?? null;
+        $connection = $this->connections[$name] ?? null;
 
-        if (null === $connectionModel) {
+        if (null === $connection) {
             throw new RuntimeException(sprintf('Not found connection by name "%s"', $name));
         }
 
-        return $connectionModel->getConnection();
+        return $connection;
     }
 
     public function getDefaultConnectionName(): string
@@ -99,41 +98,20 @@ final class DoctrineManager implements ManagerRegistry
         return isset($this->managers[$name]);
     }
 
-    public function getConnectionModel(string $name = null): ConnectionModel
-    {
-        if (null === $name) {
-            $name = $this->getDefaultConnectionName();
-        }
-
-        $connectionModel = $this->connections[$name] ?? null;
-
-        if (null === $connectionModel) {
-            throw new RuntimeException(sprintf('Not found connection by name "%s"', $name));
-        }
-
-        return $connectionModel;
-    }
-
     public function getConnections(): array
     {
-        $result = [];
-
-        foreach ($this->connections as $name => $connectionModel) {
-            $result[$name] = $connectionModel->getConnection();
-        }
-
-        return $result;
+        return $this->connections;
     }
 
     /**
      * @psalm-return list<array-key>
      */
-    public function getConnectionNames()
+    public function getConnectionNames(): array
     {
         return array_keys($this->connections);
     }
 
-    public function resetManager(?string $name = null)
+    public function resetManager(?string $name = null): ObjectManager
     {
         if (null === $name) {
             $name = $this->getDefaultManagerName();
@@ -200,7 +178,7 @@ final class DoctrineManager implements ManagerRegistry
     /**
      * @psalm-return list<array-key>
      */
-    public function getManagerNames()
+    public function getManagerNames(): array
     {
         return array_keys($this->managers);
     }
@@ -272,7 +250,7 @@ final class DoctrineManager implements ManagerRegistry
     }
 
     /**
-     * @psalm-return array<string, \Doctrine\Persistence\ObjectManager>
+     * @psalm-return array<string, ObjectManager>
      */
     public function getManagers(): array
     {

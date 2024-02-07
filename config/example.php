@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use Doctrine\DBAL\Schema\Sequence;
 use Doctrine\ORM\Events;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\Repository\DefaultRepositoryFactory;
 use Yiisoft\Yii\Doctrine\DoctrineManager;
 use Yiisoft\Yii\Doctrine\Orm\Enum\DriverMappingEnum;
 
@@ -69,6 +71,11 @@ return [
 //                  'schema_ignore_classes' => [],
 //                  'entity_listener_resolver' => DefaultEntityListenerResolver::class,
 //                  'typed_field_mapper' => DefaultTypedFieldMapper::class,
+//                  'fetch_mode_sub_select_batch_size' => 100,
+//                  'repository_factory' => DefaultRepositoryFactory::class,
+//                  'default_query_hints' => [
+//                      Query::HINT_CUSTOM_OUTPUT_WALKER => Query\SqlWalker::class,
+//                   ],
                     'mappings' => [
                         'User' => [
                             'dir' => '@src/User/Entity',
