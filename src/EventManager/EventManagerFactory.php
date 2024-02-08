@@ -18,14 +18,12 @@ final class EventManagerFactory
     ) {
     }
 
-    public function createForDbal(array $eventConfig): EventManager
+    public function create(array $eventConfig): EventManager
     {
         $eventManager = new EventManager();
 
-        // listener
         $this->configureListener($eventManager, $eventConfig['listeners'] ?? []);
 
-        // subscribers
         $this->configureSubscribers($eventManager, $eventConfig['subscribers'] ?? []);
 
         return $eventManager;
@@ -51,12 +49,5 @@ final class EventManagerFactory
 
             $eventManager->addEventSubscriber($subscriber);
         }
-    }
-
-    public function createForOrm(EventManager $eventManager, array $eventConfig): void
-    {
-        $this->configureListener($eventManager, $eventConfig['listeners'] ?? []);
-
-        $this->configureSubscribers($eventManager, $eventConfig['subscribers'] ?? []);
     }
 }

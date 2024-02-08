@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Doctrine\Dbal\Factory;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use RuntimeException;
-use Yiisoft\Yii\Doctrine\Dbal\Model\ConnectionModel;
 use Yiisoft\Yii\Doctrine\DoctrineManager;
 
 use function sprintf;
@@ -27,20 +28,18 @@ final class DynamicConnectionFactory
      *     params: array<string, mixed>,
      *     schema_assets_filter: callable
      * } $dbalConfig
+     * @throws Exception
      */
-    public function createConnection(array $dbalConfig, string $connectionName): ConnectionModel
+    public function createConnection(array $dbalConfig, string $connectionName): Connection
     {
         if ($this->doctrineManager->hasConnection($connectionName)) {
             throw new RuntimeException(sprintf('Connection "%s" already exist', $connectionName));
         }
 
-        $connectionModel = $this->connectionFactory->create($dbalConfig);
+        $connection = $this->connectionFactory->create($dbalConfig);
 
-        $this->doctrineManager->addConnection(
-            $connectionName,
-            $connectionModel
-        );
+        $this->doctrineManager->addConnection($connectionName, $connection);
 
-        return $connectionModel;
+        return $connection;
     }
 }

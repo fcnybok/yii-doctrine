@@ -49,15 +49,19 @@ final class ConfigurationFactory
 
     private function configureAutoCommit(Configuration $configuration, ?bool $autoCommit): void
     {
-        if (null !== $autoCommit) {
-            $configuration->setAutoCommit($autoCommit);
+        if (null === $autoCommit) {
+            return;
         }
+
+        $configuration->setAutoCommit($autoCommit);
     }
 
     private function configureSchemaAssetsFilter(Configuration $configuration, ?callable $schemaAssetsFilter): void
     {
-        if (null !== $schemaAssetsFilter) {
-            $configuration->setSchemaAssetsFilter($schemaAssetsFilter);
+        if (null === $schemaAssetsFilter) {
+            return;
         }
+
+        $configuration->setSchemaAssetsFilter($schemaAssetsFilter);
     }
 }

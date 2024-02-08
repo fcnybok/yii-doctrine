@@ -15,6 +15,8 @@ use Doctrine\ORM\Mapping\QuoteStrategy;
 use Doctrine\ORM\Mapping\TypedFieldMapper;
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\Filter\SQLFilter;
+use Doctrine\ORM\Repository\RepositoryFactory;
+use Doctrine\Persistence\Mapping\AbstractClassMetadataFactory;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\Persistence\Mapping\Driver\PHPDriver;
 use Doctrine\Persistence\Mapping\Driver\StaticPHPDriver;
@@ -37,21 +39,29 @@ final class ConfigurationFactory
 
     /**
      * @psalm-param array{
-     *     naming_strategy: class-string|empty,
-     *     quote_strategy: class-string|empty,
+     *     naming_strategy: class-string<NamingStrategy>|empty,
+     *     quote_strategy: class-string<QuoteStrategy>|empty,
      *     schema_ignore_classes: list<class-string>|empty,
+     *     fetch_mode_sub_select_batch_size: int,
      *     dql: array{
      *          custom_datetime_functions: array<string, callable(string):FunctionNode|class-string<FunctionNode>>|empty,
      *          custom_numeric_functions: array<string, callable(string):FunctionNode|class-string<FunctionNode>>|empty,
      *          custom_string_functions: array<string, callable(string):FunctionNode|class-string<FunctionNode>>|empty,
      *     }|null,
-     *     class_metadata_factory_name: class-string|empty,
+     *     class_metadata_factory_name: class-string<AbstractClassMetadataFactory>|empty,
      *     default_repository_class: class-string<EntityRepository<object>>|empty,
+     *     repository_factory: class-string<RepositoryFactory>|empty,
      *     custom_hydration_modes: array<string, class-string<AbstractHydrator>>|empty,
      *     filters: array<string, class-string<SQLFilter>>|empty,
      *     entity_listener_resolver: class-string<EntityListenerResolver>|empty,
      *     typed_field_mapper: class-string<TypedFieldMapper>|empty,
-     *     mappings: array<string, array{dir: string, driver: enum-string, namespace: string, fileExtension: string|empty}>|empty,
+     *     default_query_hints: array<string, class-string>|empty,
+     *     mappings: array<string, array{
+     *          dir: string,
+     *          driver: object<DriverMappingEnum>,
+     *          namespace: string,
+     *          fileExtension: string|empty
+     *     }>|empty,
      *     events: array|empty,
      *     connection: string
      * } $ormConfig
@@ -109,6 +119,9 @@ final class ConfigurationFactory
         // configure default repository class
         $this->configureDefaultRepositoryClass($configuration, $ormConfig['default_repository_class'] ?? null);
 
+        // configure repository factory
+        $this->configureRepositoryFactory($configuration, $ormConfig['repository_factory'] ?? null);
+
         // configure custom hydration modes
         $this->configureCustomHydrationModes($configuration, $ormConfig['custom_hydration_modes'] ?? []);
 
@@ -121,6 +134,15 @@ final class ConfigurationFactory
         // configure typed field mapper
         $this->configureTypedFieldMapper($configuration, $ormConfig['typed_field_mapper'] ?? null);
 
+        // configure fetch mode sub select batch size
+        $this->configureFetchModeSubselectBatchSize(
+            $configuration,
+            $ormConfig['fetch_mode_sub_select_batch_size'] ?? null
+        );
+
+        // configure default query hints
+        $this->configureDefaultQueryHints($configuration, $ormConfig['default_query_hints'] ?? []);
+
         // configure meta data drivers
         $this->configureMetaDataDrivers($configuration, $ormConfig['mappings'] ?? []);
 
@@ -128,7 +150,7 @@ final class ConfigurationFactory
     }
 
     /**
-     * @psalm-param class-string|null $className
+     * @psalm-param class-string<NamingStrategy>|null $className
      */
     private function configureNamingStrategy(Configuration $configuration, ?string $className): void
     {
@@ -146,7 +168,7 @@ final class ConfigurationFactory
     }
 
     /**
-     * @psalm-param class-string|null $className
+     * @psalm-param class-string<QuoteStrategy>|null $className
      */
     private function configureQuoteStrategy(Configuration $configuration, ?string $className): void
     {
@@ -182,7 +204,7 @@ final class ConfigurationFactory
     }
 
     /**
-     * @param list<class-string> $schemaIgnoreClasses
+     * @param list<class-string>|empty $schemaIgnoreClasses
      */
     private function configureSchemaIgnoreClasses(Configuration $configuration, array $schemaIgnoreClasses): void
     {
@@ -228,19 +250,21 @@ final class ConfigurationFactory
     }
 
     /**
-     * @psalm-param class-string|null $classMetadataFactoryName
+     * @psalm-param class-string<AbstractClassMetadataFactory>|null $classMetadataFactoryName
      */
     private function configureClassMetadataFactoryName(
         Configuration $configuration,
         ?string $classMetadataFactoryName
     ): void {
-        if (null !== $classMetadataFactoryName) {
-            $configuration->setClassMetadataFactoryName($classMetadataFactoryName);
+        if (null === $classMetadataFactoryName) {
+            return;
         }
+
+        $configuration->setClassMetadataFactoryName($classMetadataFactoryName);
     }
 
     /**
-     * @psalm-param class-string<EntityRepository> $defaultRepositoryClass
+     * @psalm-param class-string<EntityRepository>|null $defaultRepositoryClass
      */
     private function configureDefaultRepositoryClass(
         Configuration $configuration,
@@ -249,6 +273,26 @@ final class ConfigurationFactory
         if (null !== $defaultRepositoryClass) {
             $configuration->setDefaultRepositoryClassName($defaultRepositoryClass);
         }
+    }
+
+    /**
+     * @psalm-param class-string<RepositoryFactory>|null $repositoryFactoryClass
+     */
+    private function configureRepositoryFactory(Configuration $configuration, ?string $repositoryFactoryClass): void
+    {
+        if (null === $repositoryFactoryClass) {
+            return;
+        }
+
+        $repositoryFactory = $this->injector->make($repositoryFactoryClass);
+
+        if (!$repositoryFactory instanceof RepositoryFactory) {
+            throw new RuntimeException(
+                sprintf('Class %s not instance %s', $repositoryFactoryClass, RepositoryFactory::class)
+            );
+        }
+
+        $configuration->setRepositoryFactory($repositoryFactory);
     }
 
     /**
@@ -272,7 +316,7 @@ final class ConfigurationFactory
     }
 
     /**
-     * @psalm-param class-string<EntityListenerResolver>|empty $entityListenerResolverClass
+     * @psalm-param class-string<EntityListenerResolver>|null $entityListenerResolverClass
      */
     private function configureEntityListenerResolver(
         Configuration $configuration,
@@ -294,7 +338,7 @@ final class ConfigurationFactory
     }
 
     /**
-     * @psalm-param class-string<TypedFieldMapper>|empty $typedFieldMapperClass
+     * @psalm-param class-string<TypedFieldMapper>|null $typedFieldMapperClass
      */
     private function configureTypedFieldMapper(Configuration $configuration, ?string $typedFieldMapperClass): void
     {
@@ -313,8 +357,33 @@ final class ConfigurationFactory
         $configuration->setTypedFieldMapper($typedFieldMapper);
     }
 
-        /**
-     * @psalm-param array<string, array{dir: string, driver: enum-string, namespace: string, fileExtension: string|empty}>|empty $mappings
+    private function configureFetchModeSubselectBatchSize(
+        Configuration $configuration,
+        ?int $fetchModeSubselectBatchSize
+    ): void {
+        if (null === $fetchModeSubselectBatchSize) {
+            return;
+        }
+
+        $configuration->setEagerFetchBatchSize($fetchModeSubselectBatchSize);
+    }
+
+    /**
+     * @psalm-param array<string, class-string>|empty $defaultQueryHints
+     */
+    private function configureDefaultQueryHints(Configuration $configuration, array $defaultQueryHints): void
+    {
+        $configuration->setDefaultQueryHints($defaultQueryHints);
+    }
+
+    /**
+     * @psalm-param array<string, array{
+     *     dir: string,
+     *     driver: object<DriverMappingEnum>,
+     *     namespace: string,
+     *     fileExtension:
+     *     string|empty
+     * }>|empty $mappings
      */
     private function configureMetaDataDrivers(Configuration $configuration, array $mappings): void
     {
@@ -346,15 +415,6 @@ final class ConfigurationFactory
 
                     break;
                 case DriverMappingEnum::ATTRIBUTE_MAPPING:
-                    if (PHP_VERSION_ID < 80000) {
-                        throw new InvalidArgumentException(
-                            sprintf(
-                                'Driver mapping "%s" only version php-8',
-                                DriverMappingEnum::ATTRIBUTE_MAPPING->value
-                            )
-                        );
-                    }
-
                     $driver = new AttributeDriver([$dir]);
 
                     break;

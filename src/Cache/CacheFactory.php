@@ -24,7 +24,12 @@ final class CacheFactory
     private const CACHE_NAMESPACE = 'doctrine_';
 
     /**
-     * @psalm-param array{namespace: string|null, driver: string|null, path: string, server: array{host: string, port: int}|null} $cacheConfig
+     * @psalm-param array{
+     *     namespace: string|null,
+     *     driver: string|null,
+     *     path: string,
+     *     server: array{host: string, port: int}|null
+     * } $cacheConfig
      *
      * @throws CacheException
      */

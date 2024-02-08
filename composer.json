@@ -15,10 +15,10 @@
     ],
     "require": {
         "php": ">=8.1.0",
-        "doctrine/orm": "^2.17.1",
-        "doctrine/migrations": "^3.7.1",
+        "doctrine/orm": "^3.0.0.",
+        "doctrine/migrations": "^3.7.2",
         "psr/cache": "^2.0|^3.0",
-        "symfony/cache": "^6.3.8",
+        "symfony/cache": "^6.4.3",
         "psr/log": "^2|^3",
         "yiisoft/aliases": "^3.0",
         "yiisoft/injector": "^1.1",

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Doctrine\Factory;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Psr\Cache\CacheItemPoolInterface;
 use RuntimeException;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Yiisoft\Yii\Doctrine\Dbal\Factory\ConnectionFactory;
-use Yiisoft\Yii\Doctrine\Dbal\Model\ConnectionModel;
 use Yiisoft\Yii\Doctrine\DoctrineManager;
 use Yiisoft\Yii\Doctrine\Orm\Factory\EntityManagerFactory;
 
@@ -23,6 +24,9 @@ final class DoctrineManagerFactory
     ) {
     }
 
+    /**
+     * @throws Exception
+     */
     public function create(array $doctrineConfig): DoctrineManager
     {
         // init connections
@@ -47,17 +51,17 @@ final class DoctrineManagerFactory
                     );
                 }
 
-                /** @var ConnectionModel|null $connectionModel */
-                $connectionModel = $connections[$connectionName] ?? null;
+                /** @var Connection|null $connection */
+                $connection = $connections[$connectionName] ?? null;
 
-                if (null === $connectionModel) {
+                if (null === $connection) {
                     throw new RuntimeException(
                         sprintf('Not found connection "%s"', $connectionName)
                     );
                 }
 
                 $entityManagers[$name] = $this->entityManagerFactory->create(
-                    $connectionModel,
+                    $connection,
                     $this->cacheDriver,
                     $entityManagerConfig,
                     $doctrineConfig['orm']['proxies'] ?? []

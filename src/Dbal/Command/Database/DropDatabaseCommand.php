@@ -88,7 +88,7 @@ EOT
             );
         }
 
-        unset($params['dbname'], $params['url']);
+        unset($params['dbname']);
 
         if (!$input->getOption('force')) {
             $output->writeln(
